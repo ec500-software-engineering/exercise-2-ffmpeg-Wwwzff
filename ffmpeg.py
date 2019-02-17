@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 This script is used for processing on a batch of videos and
 using FFMPEG to do series of jobs
