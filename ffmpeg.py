@@ -2,7 +2,7 @@
 This script is used for processing on a batch of videos and
 using FFMPEG to do series of jobs
 
-Copyright 2018 chesterw@bu.edu by Zifan Wang
+Copyright 2019 chesterw@bu.edu by Zifan Wang
 '''
 
 import os
