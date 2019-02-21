@@ -9,6 +9,7 @@ import os
 from threading import Thread
 import time
 from queue import Queue
+import sys
 
 QUEUE = Queue()
 QUEUE_HQ = Queue()
@@ -54,24 +55,43 @@ def inmodule():
     Get file path from user's input
     '''
     global QUEUE, QUEUE_HQ, TOTAL, TMP
+    fir_time = True
     while True:
         if QUEUE.empty() and QUEUE_HQ.empty() and TOTAL - COUNT - COUNT_HQ == 0:
-            filepath = input("[Input]Give file paths, split by space:\n")
-            if filepath:
-                TMP = filepath.split(" ")
-                TOTAL += 2 * len(TMP)
-                for item in TMP:
-                    QUEUE.put(item)
-                    QUEUE_HQ.put(item)
+            # python ffmpeg.py ~/Videos      
+            #path = pathlib.Path(sys.argv[1])
+            #filelist = path.glob('*.mp4')
+            if fir_time:
+                filepath = sys.argv[1:]
+                if filepath:
+                    print("[Input]Input path confirmed")
+                    TMP = filepath
+                    TOTAL += 2 * len(TMP) 
+                    for item in TMP:
+                        QUEUE.put(item)
+                        QUEUE_HQ.put(item)
+                    fir_time = False
+            else:
+                TMP = input("[Input]Previous work finished. Give file paths, split by space:\n")
+                if TMP:
+                    TOTAL += 2 * len(TMP) 
+                    for item in TMP:
+                        QUEUE.put(item)
+                        QUEUE_HQ.put(item)
 
+def run():
+    THREADS = []
+    T1 = Thread(target=ffmpeg_hq)
+    THREADS.append(T1)
+    T2 = Thread(target=ffmpeg)
+    THREADS.append(T2)
+    T3 = Thread(target=inmodule)
+    THREADS.append(T3)
 
-THREADS = []
-T1 = Thread(target=ffmpeg_hq)
-THREADS.append(T1)
-T2 = Thread(target=ffmpeg)
-THREADS.append(T2)
-T3 = Thread(target=inmodule)
-THREADS.append(T3)
+    #inmodule()
 
-for thread in THREADS:
-    thread.start()
+    for thread in THREADS:
+        thread.start()
+
+if __name__ == '__main__':
+    run()
