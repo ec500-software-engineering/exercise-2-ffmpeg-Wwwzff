@@ -1,6 +1,5 @@
 import pytest
 import ffmpeg
-import os
 
 
 @pytest.mark.asyncio
