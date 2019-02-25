@@ -3,12 +3,21 @@ group: travis_latest
 dist: xenial
 
 git:
-  depth: 25
+  depth: 3
   quiet: true
 
 python:
+- 3.8-dev
 - 3.7
 
+addons:
+  apt:
+    packages:
+    - ffmpeg
+
+install: pip install -e .
+
 script:
-- flake8 --extend-ignore=W,E1,E2,E3,E5
-- pytest
+- flake8
+- mypy . --ignore-missing-imports
+- pytest -v
