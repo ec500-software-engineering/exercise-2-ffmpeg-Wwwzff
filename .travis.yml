@@ -3,18 +3,14 @@ group: travis_latest
 dist: xenial
 
 python:
-- 3.8-dev
 - 3.7
-- 3.6.6
 
 addons:
   apt:
-    packages:
-    - ffmpeg
+    packages: ffmpeg
 
 install: pip install -e .
 
 script:
-- flake8
-- mypy . --ignore-missing-imports
+- flake8 --extend-ignore=W,E1,E2,E3,E5
 - pytest -v
