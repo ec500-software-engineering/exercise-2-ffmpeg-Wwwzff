@@ -3,7 +3,7 @@ group: travis_latest
 dist: xenial
 
 python:
-- 3.7
+- 3.6.6
 
 addons:
   apt:
