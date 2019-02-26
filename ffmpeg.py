@@ -20,15 +20,14 @@ TOTAL = 0
 TMP = []
 done = False
 done_HQ = False
-idle = False
-idle_HQ = False
+
 
 
 def ffmpeg_hq():
     '''
     Convert file to 720p at 2Mbps and 30fps
     '''
-    global COUNT_HQ, QUEUE_HQ, TOTAL, done_HQ, idle_HQ
+    global COUNT_HQ, QUEUE_HQ, TOTAL, done_HQ
     while True:
         if not QUEUE_HQ.empty():
             done_HQ = False
@@ -118,7 +117,6 @@ def checkstatus():
 
 
 def run(filepath):
-    global idle, idle_HQ
     THREADS = []
     T1 = Thread(target=ffmpeg_hq)
     THREADS.append(T1)
