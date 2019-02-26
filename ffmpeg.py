@@ -43,7 +43,7 @@ def ffmpeg_hq():
             # idle for 30 seconds and end thread
             time.sleep(30)
             if QUEUE.empty():
-                break
+                exit(0)
 
 
 def ffmpeg():
@@ -70,7 +70,7 @@ def ffmpeg():
         else:
             time.sleep(30)
             if QUEUE.empty():
-                break
+                exit(0)
 
 
 def inmodule(filepath):
