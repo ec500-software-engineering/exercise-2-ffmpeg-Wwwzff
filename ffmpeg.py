@@ -9,7 +9,6 @@ import subprocess
 from threading import Thread
 import time
 from queue import Queue
-from pathlib import Path
 
 QUEUE = Queue()
 QUEUE_HQ = Queue()
