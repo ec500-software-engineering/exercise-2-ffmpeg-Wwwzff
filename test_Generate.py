@@ -14,9 +14,9 @@ def genpat(tmp_path):
 
 
 def test_duration():
-    fnin = ['test.mp4']
-    fnout = ['0.mp4']
-    fnout_720 = ['0_HQ.mp4']
+    fnin = ['./test.mp4']
+    fnout = ['./0.mp4']
+    fnout_720 = ['./0_HQ.mp4']
 
     orig_meta = ffprobe_sync(fnin[0])
     orig_duration = float(orig_meta['streams'][0]['duration'])
