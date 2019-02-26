@@ -18,43 +18,51 @@ COUNT_HQ = 0
 COUNT = 0
 TOTAL = 0
 TMP = []
+done = False
+done_HQ = False
 
 
 def ffmpeg_hq():
     '''
     Convert file to 720p at 2Mbps and 30fps
     '''
-    global COUNT_HQ, QUEUE_HQ, TOTAL
+    global COUNT_HQ, QUEUE_HQ, TOTAL, done_HQ
     while True:
         if not QUEUE_HQ.empty():
+            done_HQ = False
             print("[FFMPEG_HQ]Working on the "+str(COUNT_HQ+1)+" job.")
             single_file = QUEUE_HQ.get()
             info = "ffmpeg -i "+single_file+" -b 2M -r 30 -f mp4 -s 1280x720 -loglevel quiet "+str(COUNT_HQ)+"_HQ.mp4"
             subprocess.check_call(info.split(" "))
             COUNT_HQ += 1
+            
             print("[FFMPEG_HQ]Finished "+str(COUNT_HQ + COUNT)+" now. "+str(TOTAL - COUNT - COUNT_HQ)+" left.")
             time.sleep(3)
+            done_HQ = True
         else:
             # idle for 30 seconds and end thread
             time.sleep(30)
             if QUEUE.empty():
-                exit(0)
+                break
 
 
 def ffmpeg():
     '''
     Convert file to 480p at 1Mbps and 30fps
     '''
-    global COUNT, COUNT_HQ, QUEUE, TOTAL
+    global COUNT, COUNT_HQ, QUEUE, TOTAL, done
     while True:
         if not QUEUE.empty():
+            done = False
             print("[FFMPEG]Working on the "+str(COUNT+1)+" job.")
             single_file = QUEUE.get()
             info = "ffmpeg -i "+single_file+" -b 1M -r 30 -f mp4 -s hd480 -loglevel quiet "+str(COUNT)+".mp4"
             subprocess.check_call(info.split(" "))
+            
             COUNT += 1
             print("[FFMPEG]Finished "+str(COUNT + COUNT_HQ)+" now. "+str(TOTAL - COUNT - COUNT_HQ)+" left.")
             time.sleep(3)
+            done = True
             '''
             if not Path(str(COUNT)+".mp4").is_file():
                 raise RuntimeError(f'did not convert {single_file}')
@@ -62,7 +70,7 @@ def ffmpeg():
         else:
             time.sleep(30)
             if QUEUE.empty():
-                exit(0)
+                break
 
 
 def inmodule(filepath):
@@ -97,6 +105,14 @@ def inmodule(filepath):
                     QUEUE.put(item)
                     QUEUE_HQ.put(item)
             '''
+
+            
+def checkstatus():
+    global done, done_HQ
+    if done and done_HQ:
+        return True
+    else:
+        return False
 
 
 def run(filepath):
