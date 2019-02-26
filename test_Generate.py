@@ -1,8 +1,9 @@
 import pytest
-from ffmpeg import run
+from ffmpeg import run, checkstatus
 import subprocess
 from probe import ffprobe_sync
 from time import sleep
+from pathlib import Path
 
 
 @pytest.fixture
@@ -22,16 +23,16 @@ def test_duration():
     orig_duration = float(orig_meta['streams'][0]['duration'])
 
     run(fnin)
-    sleep(100)  # waiting for job to be finished
+    
+    if checkstatus():
+        meta_480 = ffprobe_sync(fnout[0])
+        duration_480 = float(meta_480['streams'][0]['duration'])
 
-    meta_480 = ffprobe_sync(fnout[0])
-    duration_480 = float(meta_480['streams'][0]['duration'])
+        meta_720 = ffprobe_sync(fnout_720[0])
+        duration_720 = float(meta_720['streams'][0]['duration'])
 
-    meta_720 = ffprobe_sync(fnout_720[0])
-    duration_720 = float(meta_720['streams'][0]['duration'])
-
-    assert orig_duration == pytest.approx(duration_480)
-    # assert orig_duration == pytest.approx(duration_720)
+        assert orig_duration == pytest.approx(duration_480)
+        # assert orig_duration == pytest.approx(duration_720)
 
 
 if __name__ == "__main__":
