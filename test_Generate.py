@@ -29,10 +29,18 @@ def test_duration():
         
         
 def test_duration_720():
+    fnin = ['test.mp4']
     fnout_720 = ['0_HQ.mp4']
-    meta_720 = ffprobe_sync(fnout_720[0])
-    duration_720 = float(meta_720['streams'][0]['duration'])
-    assert orig_duration == pytest.approx(duration_720)
+    
+    orig_meta = ffprobe_sync(fnin[0])
+    orig_duration = float(orig_meta['streams'][0]['duration'])
+
+    run(fnin)
+    
+    if checkstatus():
+        meta_720 = ffprobe_sync(fnout_720[0])
+        duration_720 = float(meta_720['streams'][0]['duration'])
+        assert orig_duration == pytest.approx(duration_720)
     
     
 if __name__ == "__main__":
