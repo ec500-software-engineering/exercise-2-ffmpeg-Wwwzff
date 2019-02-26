@@ -38,3 +38,5 @@ def test_duration_720():
 if __name__ == "__main__":
     # genpat("./")
     test_duration()
+    test_duration_720()
+    
