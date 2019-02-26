@@ -20,13 +20,15 @@ TOTAL = 0
 TMP = []
 done = False
 done_HQ = False
+idle = False
+idle_HQ = False
 
 
 def ffmpeg_hq():
     '''
     Convert file to 720p at 2Mbps and 30fps
     '''
-    global COUNT_HQ, QUEUE_HQ, TOTAL, done_HQ
+    global COUNT_HQ, QUEUE_HQ, TOTAL, done_HQ, idle_HQ
     while True:
         if not QUEUE_HQ.empty():
             done_HQ = False
@@ -41,9 +43,9 @@ def ffmpeg_hq():
             done_HQ = True
         else:
             # idle for 30 seconds and end thread
-            time.sleep(30)
+            time.sleep(3)
             if QUEUE.empty():
-                exit(0)
+                break
 
 
 def ffmpeg():
@@ -68,9 +70,9 @@ def ffmpeg():
                 raise RuntimeError(f'did not convert {single_file}')
             '''
         else:
-            time.sleep(30)
+            time.sleep(3)
             if QUEUE.empty():
-                exit(0)
+                break
 
 
 def inmodule(filepath):
@@ -106,7 +108,7 @@ def inmodule(filepath):
                     QUEUE_HQ.put(item)
             '''
 
-            
+           
 def checkstatus():
     global done, done_HQ
     if done and done_HQ:
@@ -116,11 +118,13 @@ def checkstatus():
 
 
 def run(filepath):
+    global idle, idle_HQ
     THREADS = []
     T1 = Thread(target=ffmpeg_hq)
     THREADS.append(T1)
     T2 = Thread(target=ffmpeg)
     THREADS.append(T2)
+
 
     # T3 = Thread(target=inmodule,args=filepath)
     # THREADS.append(T3)
@@ -128,4 +132,5 @@ def run(filepath):
     inmodule(filepath)
 
     for thread in THREADS:
+        thread.setDaemon(True)
         thread.start()
