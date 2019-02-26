@@ -22,7 +22,7 @@ def test_duration():
     orig_duration = float(orig_meta['streams'][0]['duration'])
 
     run(fnin)
-    sleep(4)  # waiting for job to be finished
+    sleep(100)  # waiting for job to be finished
 
     meta_480 = ffprobe_sync(fnout[0])
     duration_480 = float(meta_480['streams'][0]['duration'])
