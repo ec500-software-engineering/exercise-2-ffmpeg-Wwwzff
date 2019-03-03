@@ -8,3 +8,8 @@ Python CI template for EC500 Software Engineering
 ## Parallel Details
 * Convert input video into 720p and 480p in parallel. Each time convert one video in different resolution.
 * When works are done the input module will wake up and you may wanna add other jobs.
+
+## How to run?
+```
+python ffmpeg.py [FilePath]
+```
