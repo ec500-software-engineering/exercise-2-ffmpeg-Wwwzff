@@ -131,3 +131,7 @@ def run(filepath):
     for thread in THREADS:
         thread.setDaemon(True)
         thread.start()
+
+if __name__ == "__main__":
+    filepath = ""
+    run(filepath)
